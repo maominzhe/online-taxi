@@ -3,9 +3,11 @@ package com.mashibing.apipassenger.service;
 import com.mashibing.apipassenger.remote.ServiceVerificationcodeClient;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.response.NumberCodeResponse;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: Minzhe Mao
@@ -16,8 +18,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class VerificationCodeService {
     @Autowired
-    public ServiceVerificationcodeClient serviceVerificationcodeClient;
-    public String generatorCode(String passengerPhone){
+    private ServiceVerificationcodeClient serviceVerificationcodeClient;
+
+    private String verificationCodePrefix = "passenger-verification-code-";
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    public ResponseResult generatorCode(String passengerPhone){
         // call verification service, get code
         System.out.println("call verification code service: ");
 
@@ -27,11 +35,12 @@ public class VerificationCodeService {
 
         // store code in redis
         System.out.println("store in redis...");
+        // Key,value,expiration time
+        String key = verificationCodePrefix + passengerPhone;
+        // store code in redis
+        stringRedisTemplate.opsForValue().set(key,numberCode+"",2, TimeUnit.MINUTES);
 
-        // return json
-        JSONObject result = new JSONObject();
-        result.put("code",1);
-        result.put("message","success");
-        return result.toString();
+
+        return ResponseResult.success();
     }
 }
