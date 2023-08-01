@@ -37,4 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 
-/service-passenger-user/src/main/resources/application.yml
+*.yml

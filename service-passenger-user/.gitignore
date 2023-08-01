@@ -39,4 +39,5 @@ build/
 
 
 #yml
-/src/java/resources/application.yml
+./src/java/resources/application.yml
+*.yml
