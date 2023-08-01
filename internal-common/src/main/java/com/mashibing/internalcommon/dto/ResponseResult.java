@@ -17,6 +17,7 @@ public class ResponseResult<T> {
     private int code;
     private String message;
     private T data;
+    //private String token;
 
     public static <T> ResponseResult success(){
         return new ResponseResult().setCode(CommonStatusEnum.SUCCESS.getCode()).
@@ -39,5 +40,21 @@ public class ResponseResult<T> {
 
     public static <T> ResponseResult fail(T data){
         return new ResponseResult().setData(data);
+    }
+
+    public static <T> ResponseResult notExistError(T data){
+        return new ResponseResult().setCode(CommonStatusEnum.VERIFICATION_CODE_NOT_EXIST_ERROR.getCode()).
+                setMessage(CommonStatusEnum.VERIFICATION_CODE_NOT_EXIST_ERROR.getValue()).setData(data);
+    }
+    public static ResponseResult notExistError(){
+        return new ResponseResult().setData(CommonStatusEnum.VERIFICATION_CODE_NOT_EXIST_ERROR.getCode()).setMessage(CommonStatusEnum.VERIFICATION_CODE_NOT_EXIST_ERROR.getValue());
+    }
+
+    public static <T> ResponseResult notMatchError(T data){
+        return new ResponseResult().setCode(CommonStatusEnum.VERIFICATION_CODE_ERROR.getCode()).setMessage(CommonStatusEnum.VERIFICATION_CODE_ERROR.getValue()).setData(data);
+    }
+
+    public static ResponseResult notMatchError(){
+        return new ResponseResult().setCode(CommonStatusEnum.VERIFICATION_CODE_ERROR.getCode()).setMessage(CommonStatusEnum.VERIFICATION_CODE_ERROR.getValue());
     }
 }

@@ -6,6 +6,7 @@ import com.mashibing.internalcommon.dto.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +28,16 @@ public class VerificationCodeController {
         System.out.println("Received passenger phone: " + passengerPhone);
 
         return verificationCodeService.generatorCode(passengerPhone);
+    }
+
+    @PostMapping("/verification-code-check")
+
+    public ResponseResult checkVerificationCode(@RequestBody VerificationCodeDTO verificationCodeDTO){
+
+        String passengerPone = verificationCodeDTO.getPassengerPhone();
+        String verificationCode = verificationCodeDTO.getVerificationCode();
+
+        System.out.println("Phone number is :" + passengerPone + "Verification Code: "+ verificationCode);
+        return verificationCodeService.checkCode(passengerPone,verificationCode);
     }
 }
