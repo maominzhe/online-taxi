@@ -1,8 +1,10 @@
 package com.mashibing.apipassenger.service;
 
+import com.mashibing.apipassenger.remote.ServicePassengerUserClient;
 import com.mashibing.apipassenger.remote.ServiceVerificationcodeClient;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.request.VerificationCodeDTO;
 import com.mashibing.internalcommon.response.NumberCodeResponse;
 import com.mashibing.internalcommon.response.TokenResponse;
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +53,9 @@ public class VerificationCodeService {
         return ResponseResult.success("");
     }
 
+
+    @Autowired
+    private ServicePassengerUserClient servicePassengerUserClient;
     public ResponseResult checkCode(String passengerPhone, String verificationCode){
         // 1.Retrieve code from redis given phone number
         System.out.println("read verification code from redis based on phone number..");
@@ -77,6 +82,9 @@ public class VerificationCodeService {
 
         // Check if the user exists in the db, process accordingly
         System.out.println("Check if user exists, process accordingly.. ");
+        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
+        servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
 
         // Issue token
         System.out.println("issue tokens.. ");

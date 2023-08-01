@@ -36,8 +36,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-
-
-#yml
-./src/java/resources/application.yml
-*.yml
