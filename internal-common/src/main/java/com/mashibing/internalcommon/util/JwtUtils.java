@@ -24,11 +24,14 @@ public class JwtUtils {
 
     private static final String JWT_KEY_IDENTITY = "identity";
 
+    private static final String JWT_TOKEN_TYPE = "tokenType";
+
     // generate token
-    private static String generatorToken(String passengerPhone, String identity){
+    public static String generatorToken(String passengerPhone, String identity, String tokenType){
         Map<String,String> map = new HashMap<>();
         map.put(JWT_KEY_PHONE, passengerPhone);
         map.put(JWT_KEY_IDENTITY, identity);
+        map.put(JWT_TOKEN_TYPE, tokenType);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 1);
         Date date = calendar.getTime();
@@ -41,7 +44,7 @@ public class JwtUtils {
             }
         );
 
-        builder.withExpiresAt(date);
+        //builder.withExpiresAt(date);
 
 
         // generate token
@@ -70,7 +73,7 @@ public class JwtUtils {
 //        Map<String, String> map = new HashMap<>();
 //        map.put("name","mao");
 //        map.put("age","26");
-        String s = generatorToken("123456", "1");
+        String s = generatorToken("123456", "1","refreshToken");
         System.out.println("generated token is " + s);
 
         System.out.println("------decoding token--------");

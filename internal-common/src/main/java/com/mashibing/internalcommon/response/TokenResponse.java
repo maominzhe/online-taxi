@@ -10,15 +10,8 @@ import lombok.Data;
  **/
 @Data
 public class TokenResponse {
-    private String token;
+    private String refreshToken;
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
+    private String accessToken;
 
 }
