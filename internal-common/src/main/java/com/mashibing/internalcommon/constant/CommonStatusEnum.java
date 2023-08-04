@@ -9,8 +9,15 @@ package com.mashibing.internalcommon.constant;
 public enum CommonStatusEnum {
     SUCCESS(1,"success"),
     FAIL(0,"fail"),
+    /**
+     * verification code error: 1000-1099
+     */
     VERIFICATION_CODE_NOT_EXIST_ERROR(1099,"verification code does not exist.."),
-    VERIFICATION_CODE_ERROR(1000,"verification code is not correct..")
+    VERIFICATION_CODE_ERROR(1000,"verification code is not correct.."),
+    /**
+     * token code error: 1100-1199
+     */
+    TOKEN_ERROR(1199,"invalid token..")
     ;
     private int code;
     private String value;

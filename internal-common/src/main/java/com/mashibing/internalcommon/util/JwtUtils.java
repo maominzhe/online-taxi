@@ -60,7 +60,7 @@ public class JwtUtils {
 
     public static TokenResult parseToken(String token){
         DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
-        String phone = verify.getClaim(JWT_KEY_PHONE).toString();
+        String phone = verify.getClaim(JWT_KEY_PHONE).asString();
         String identity = verify.getClaim(JWT_KEY_IDENTITY).toString();
 
         TokenResult tokenResult = new TokenResult();
@@ -69,6 +69,20 @@ public class JwtUtils {
 
         return tokenResult;
     }
+
+
+    public static TokenResult checkToken(String token){
+        TokenResult tokenResult = null;
+        try{
+            tokenResult = JwtUtils.parseToken(token);
+        }catch (Exception e){
+            return null;
+        }
+        return tokenResult;
+    }
+
+
+
     public static void main(String[] args) {
 //        Map<String, String> map = new HashMap<>();
 //        map.put("name","mao");
