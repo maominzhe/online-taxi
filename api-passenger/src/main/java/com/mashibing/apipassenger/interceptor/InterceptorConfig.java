@@ -20,7 +20,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JwtInterceptor())
+        //registry.addInterceptor(new JwtInterceptor())
+        registry.addInterceptor(jwtInterceptor())
 
         // intercept path..
                 .addPathPatterns("/**")
@@ -28,6 +29,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
         // white list
                 .excludePathPatterns("/noauthTest")
                 .excludePathPatterns("/verification-code-check")
-                .excludePathPatterns("/verification-code");
+                .excludePathPatterns("/verification-code")
+                .excludePathPatterns("/token-refresh")
+        ;
     }
 }
