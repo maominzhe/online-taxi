@@ -17,7 +17,11 @@ public enum CommonStatusEnum {
     /**
      * token code error: 1100-1199
      */
-    TOKEN_ERROR(1199,"invalid token..")
+    TOKEN_ERROR(1199,"invalid token.."),
+    /**
+     * USER ERROR: 1200-1299
+     */
+    USER_NOT_EXISTS(1200,"user not exists..")
     ;
     private int code;
     private String value;

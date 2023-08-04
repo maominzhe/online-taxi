@@ -2,6 +2,9 @@ package com.mashibing.apipassenger.service;
 
 import com.mashibing.internalcommon.dto.PassengerUser;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.dto.TokenResult;
+import com.mashibing.internalcommon.response.TokenResponse;
+import com.mashibing.internalcommon.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +25,17 @@ public class UserService {
         passengerUser.setPassengerName("mao");
         passengerUser.setProfilePhoto("pic");
 
+        TokenResult tokenResult = JwtUtils.checkToken(accessToken);
+        assert tokenResult != null;
+        String phone = tokenResult.getPhone();
+        log.info("phoneNumber: " + phone);
+        //String pic = tokenResult.getPhone();
+
 
         // query user info based on phone number
 
 
         return ResponseResult.success(passengerUser);
     }
+
 }
