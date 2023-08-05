@@ -54,16 +54,16 @@ public class JwtInterceptor implements HandlerInterceptor {
 
             // fetch token from redis with tokenKey.
             //StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
-            //String tokenRedis = stringRedisTemplate.opsForValue().get(tokenKey);
+            String tokenRedis = stringRedisTemplate.opsForValue().get(tokenKey);
 
 //            if ((StringUtils.isBlank(tokenRedis)) || (!token.trim().equals(tokenRedis.trim()))){
 //                resultString = "invalid token..";
 //                result = false;
             }
             if (!result){
-                PrintWriter out = response.getWriter();
-                out.print(JSONObject.fromObject(ResponseResult.fail(resultString)).toString());
-                //System.out.println("JwtInterceptor: invalid token..");
+//                PrintWriter out = response.getWriter();
+//                out.print(JSONObject.fromObject(ResponseResult.fail(resultString)).toString());
+                System.out.println("JwtInterceptor: invalid token..");
             }
         return true;
         }
