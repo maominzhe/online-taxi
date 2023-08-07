@@ -1,21 +1,21 @@
-package com.mashibing.apipassenger;
+package com.mashibing.serviceorder;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @Auther: Minzhe Mao
- * @Date: 30.07.23 -07 - 30
- * @Description: com.mashibing.apipassenger
+ * @Date: 07.08.23 -08 - 07
+ * @Description: com.mashibing.serviceorder
  * @Version: 1.0
  **/
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
-public class ApiPassengerApplication {
+@MapperScan("com.mashibing.serviceorder.mapper")
+public class ServiceOrderApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ApiPassengerApplication.class, args);
+        SpringApplication.run(ServiceOrderApplication.class, args);
     }
 }

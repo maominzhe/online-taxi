@@ -18,6 +18,7 @@
         <module>internal-common</module>
         <module>service-passenger-user</module>
         <module>service-map</module>
+        <module>service-order</module>
     </modules>
 
     <properties>

@@ -23,11 +23,14 @@ public class UserController {
         return userService.loginOrRegister(passengerPhone);
     }
 
-//    @GetMapping("/user/{phone}")
-//    public ResponseResult getUser(@PathVariable())
-    @GetMapping("/user/")
-    public ResponseResult getUser(@RequestBody VerificationCodeDTO verificationCodeDTO){
-        String passengerPhone = verificationCodeDTO.getPassengerPhone();
+    @GetMapping("/user/{phone}")
+    public ResponseResult getUser(@PathVariable("phone") String passengerPhone){
+        System.out.println("service-passenger-user: phone:"+passengerPhone);
         return userService.getUserByPhone(passengerPhone);
+
+//    @GetMapping("/user/")
+//    public ResponseResult getUser(@RequestBody VerificationCodeDTO verificationCodeDTO){
+//        String passengerPhone = verificationCodeDTO.getPassengerPhone();
+//        return userService.getUserByPhone(passengerPhone);
     }
 }
