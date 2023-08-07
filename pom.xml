@@ -19,6 +19,7 @@
         <module>service-passenger-user</module>
         <module>service-map</module>
         <module>service-order</module>
+        <module>service-driver-user</module>
     </modules>
 
     <properties>

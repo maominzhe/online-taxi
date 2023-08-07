@@ -21,7 +21,24 @@ public enum CommonStatusEnum {
     /**
      * USER ERROR: 1200-1299
      */
-    USER_NOT_EXISTS(1200,"user not exists..")
+    USER_NOT_EXISTS(1200,"user not exists.."),
+
+    /**
+     * 司机和车辆：1500-1599
+     */
+    DRIVER_CAR_BIND_NOT_EXISTS(1500,"司机和车辆绑定关系不存在"),
+
+    DRIVER_NOT_EXITST(1501,"司机不存在"),
+
+    DRIVER_CAR_BIND_EXISTS(1502,"司机和车辆绑定关系已存在，请勿重复绑定"),
+
+    DRIVER_BIND_EXISTS(1503,"司机已经被绑定了，请勿重复绑定"),
+
+    CAR_BIND_EXISTS(1504,"车辆已经被绑定了，请勿重复绑定"),
+
+    CITY_DRIVER_EMPTY(1505,"当前城市没有可用的司机"),
+
+    AVAILABLE_DRIVER_EMPTY(1506,"可用的司机为空"),
     ;
     private int code;
     private String value;
