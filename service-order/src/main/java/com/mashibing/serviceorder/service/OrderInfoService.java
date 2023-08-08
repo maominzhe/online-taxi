@@ -1,5 +1,6 @@
 package com.mashibing.serviceorder.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.constant.OrderConstants;
 import com.mashibing.internalcommon.dto.*;
 import com.mashibing.internalcommon.request.ForecastDTO;
@@ -8,7 +9,7 @@ import com.mashibing.internalcommon.response.DirectionResponse;
 import com.mashibing.internalcommon.response.TerminalResponse;
 import com.mashibing.serviceorder.mapper.DriverUserMapper;
 import com.mashibing.serviceorder.mapper.OrderInfoMapper;
-import com.mashibing.serviceorder.remote.ServiceDriverClient;
+import com.mashibing.serviceorder.remote.ServiceDriverUserClient;
 import com.mashibing.serviceorder.remote.ServiceMapClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
@@ -18,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther: Minzhe Mao
@@ -41,7 +40,7 @@ public class OrderInfoService {
     DriverUserMapper driverUserMapper;
 
     @Autowired
-    ServiceDriverClient serviceDriverClient;
+    ServiceDriverUserClient serviceDriverClient;
 
 
     public ResponseResult add(OrderRequest orderRequest){
@@ -57,25 +56,20 @@ public class OrderInfoService {
         orderInfo.setGmtCreate(now);
         orderInfo.setGmtModified(now);
 
+
         // calculate journey duration
         ForecastDTO forecastDTO = new ForecastDTO();
         forecastDTO.setDepLongitude(orderInfo.getDepLongitude());
         forecastDTO.setDepLatitude(orderInfo.getDepLatitude());
-        forecastDTO.setDesLongitude(orderInfo.getDestLongitude());
-        forecastDTO.setDesLatitude(orderInfo.getDestLatitude());
+        forecastDTO.setDestLongitude(orderInfo.getDestLongitude());
+        forecastDTO.setDestLatitude(orderInfo.getDestLatitude());
 //
-//        ResponseResult<DirectionResponse> direction = serviceMapClient.driving(forecastDTO);
-//        Integer distance = direction.getData().getDistance();
-//        Integer duration = direction.getData().getDuration();
+        ResponseResult<DirectionResponse> direction = serviceMapClient.driving(forecastDTO);
+        Integer distance = direction.getData().getDistance();
+        Integer duration = direction.getData().getDuration();
 
-        //DirectionResponse directionResponse = serviceMapClient.driving(forecastDTO).getData();
-
-        //ResponseResult directionResponse = getEstimatedDuration(forecastDTO);
-
-        //ResponseResult directionResponse = serviceMapClient.driving(forecastDTO);
-
-        //orderInfo.setJourneyDistance(directionResponse.getDistance());
-        //orderInfo.setJourneyDuration(directionResponse.getDuration());
+        orderInfo.setJourneyDuration(duration);
+        orderInfo.setJourneyDistance(distance);
 
         // insert into database
         orderInfoMapper.insert(orderInfo);
@@ -95,18 +89,13 @@ public class OrderInfoService {
         }
 
 
-        return ResponseResult.success(orderInfo);
+        return ResponseResult.success("");
 
     }
 
 
 
     public int dispatchRealTimeOrder(OrderInfo orderInfo){
-
-
-//        //test
-//        DriverUser driverUser = new DriverUser();
-//        driverUser = getDriverByCarId(1584359540577861633L).getData();
 
 
 
@@ -130,16 +119,6 @@ public class OrderInfoService {
             Integer radius = radiusList.get(i);
             listResponseResult = serviceMapClient.terminalAroundSearch(center, radius);
 
-            // calculate journey duration
-            ForecastDTO forecastDTO = new ForecastDTO();
-            forecastDTO.setDepLongitude(orderInfo.getDepLongitude());
-            forecastDTO.setDepLatitude(orderInfo.getDepLatitude());
-            forecastDTO.setDesLongitude(orderInfo.getDestLongitude());
-            forecastDTO.setDesLatitude(orderInfo.getDestLatitude());
-//
-            ResponseResult<DirectionResponse> direction = serviceMapClient.driving(forecastDTO);
-            Integer distance = direction.getData().getDistance();
-            Integer duration = direction.getData().getDuration();
 
             log.info("in the range of "+radius + "m, found cars: "+ JSONArray.fromObject(listResponseResult.getData()).toString());
 
@@ -150,6 +129,10 @@ public class OrderInfoService {
                 TerminalResponse terminalResponse = data.get(j);
                 Long carId = terminalResponse.getCarId();
 
+                ResponseResult<DriverUser> driverUser = new ResponseResult<DriverUser>();
+                driverUser = serviceDriverClient.getDriverByCarId(carId);
+                DriverUser driverUser1 = driverUser.getData();
+
                 // get car geo status
                 String longitude = terminalResponse.getLongitude();
                 String latitude = terminalResponse.getLatitude();
@@ -157,53 +140,54 @@ public class OrderInfoService {
 
                 // get driver info
                 //DriverUser driverUser = getDriverUserByCarId(carId);
-                DriverUser driverUser = new DriverUser();
-                Long driverId = driverUser.getId();
-                String driverPhone = driverUser.getDriverPhone();
-                String driverName = driverUser.getDriverName();
+                Long driverId = driverUser.getData().getId();
+                String driverPhone = driverUser.getData().getDriverPhone();
+                String driverName = driverUser.getData().getDriverName();
 
                 if (getDriverWorkingStatus(driverId)==0){
                     // found driver is not available
-                    log.info("carId: "+carId+"is available");
                     continue;
                 }
                 // calculate pick up route and duration
-                ForecastDTO forecastDTO1 = new ForecastDTO();
+                ForecastDTO forecastDTO = new ForecastDTO();
                 forecastDTO.setDepLongitude(longitude);
                 forecastDTO.setDepLatitude(latitude);
                 String passengerLongitude = orderInfo.getDepLongitude();
                 String passengerLatitude = orderInfo.getDepLatitude();
-                forecastDTO.setDesLatitude(passengerLatitude);
-                forecastDTO.setDesLongitude(passengerLongitude);
-                //DirectionResponse directionResponse = serviceMapClient.driving(forecastDTO);
+                forecastDTO.setDestLatitude(passengerLatitude);
+                forecastDTO.setDestLongitude(passengerLongitude);
+                ResponseResult<DirectionResponse> driverDirection = serviceMapClient.driving(forecastDTO);
 
                 // to pick up distance
-//                Integer driverPassengerDistance = directionResponse.getDistance();
-//                Integer driverPickupTime = directionResponse.getDuration();
+                Integer driverDistance = driverDirection.getData().getDistance();
+                Integer driverPickupDuration = driverDirection.getData().getDuration();
 
-                // estimated
+                //update order info
+                Long orderId = orderInfo.getId();
+                QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("id",orderId);
+                OrderInfo orderInfoUpdated = orderInfoMapper.selectOne(queryWrapper);
+
+                orderInfoUpdated.setDriverPickupDuration(driverPickupDuration);
+                orderInfoUpdated.setDriverDistance(driverDistance);
+                orderInfoUpdated.setCarId(carId);
+                orderInfoUpdated.setDriverId(driverId);
+                orderInfoUpdated.setDriverPhone(driverPhone);
+                orderInfoUpdated.setDriverName(driverName);
+                orderInfoUpdated.setReceiveOrderCarLongitude(longitude);
+                orderInfoUpdated.setReceiveOrderCarLatitude(latitude);
+
+                orderInfoUpdated.setReceiveOrderTime(LocalDateTime.now());
+                orderInfoUpdated.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
 
 
 
 
-
-
-                // found available driver, match driver and info to order.
-                orderInfo.setDriverId(driverId);
-                orderInfo.setDriverPhone(driverPhone);
-                orderInfo.setDriverName(driverName);
-                orderInfo.setReceiveOrderCarLongitude(longitude);
-                orderInfo.setReceiveOrderCarLatitude(latitude);
-
-                orderInfo.setReceiveOrderTime(LocalDateTime.now());
-                orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
-
-                orderInfoMapper.updateById(orderInfo);
+                orderInfoMapper.updateById(orderInfoUpdated);
 
 
                 // notify passenger
                 //TODO
-
 
                 result = 1;
                 // found driver， exit search loop
@@ -212,12 +196,6 @@ public class OrderInfoService {
         }
         return result;
     }
-
-
-//    public ResponseResult<DirectionResponse> getEstimatedDuration(ForecastDTO forecastDTO){
-//
-//        return serviceMapClient.driving(forecastDTO);
-//    }
 
 
 

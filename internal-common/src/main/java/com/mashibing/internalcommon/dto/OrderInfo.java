@@ -238,7 +238,12 @@ public class OrderInfo {
 
     private Integer journeyDuration;
 
+    private Integer driverPickupDuration;
+
+    private Integer driverDistance;
+
     private LocalDateTime estimatedArrivalTime;
 
     private Integer journeyDistance;
+
 }

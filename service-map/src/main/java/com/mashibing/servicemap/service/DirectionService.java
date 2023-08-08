@@ -21,14 +21,16 @@ public class DirectionService {
      * end points, and the return value is in meters and minutes.
      * @param depLongitude
      * @param depLatitude
-     * @param desLongitude
-     * @param desLatitude
+     * @param destLongitude
+     * @param destLatitude
      * @return
      */
 
 
-    public ResponseResult driving(String depLongitude, String depLatitude, String desLongitude, String desLatitude){
+    public ResponseResult driving(String depLongitude, String depLatitude, String destLongitude, String destLatitude){
         // call third party api for journey duration and route
-        return ResponseResult.success(mapDirectionClient.direction(depLongitude, depLatitude, desLongitude, desLatitude));
+        //return ResponseResult.success(mapDirectionClient.direction(depLongitude, depLatitude, desLongitude, desLatitude));
+        DirectionResponse direction = mapDirectionClient.direction(depLongitude, depLatitude, destLongitude, destLatitude);
+        return ResponseResult.success(direction);
     }
 }

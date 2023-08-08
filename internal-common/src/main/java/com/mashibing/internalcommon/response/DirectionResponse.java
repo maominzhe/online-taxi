@@ -12,4 +12,6 @@ import lombok.Data;
 public class DirectionResponse {
     private Integer distance;
     private Integer duration;
+
+
 }

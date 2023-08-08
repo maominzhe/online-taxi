@@ -18,14 +18,25 @@ import org.springframework.web.bind.annotation.*;
 public class DirectionController {
     @Autowired
     private DirectionService directionService;
-    @GetMapping("/driving")
+    @PostMapping("/driving")
     public ResponseResult driving(@RequestBody ForecastDTO forecastDTO){
 
         String depLongitude = forecastDTO.getDepLongitude();
         String depLatitude = forecastDTO.getDepLatitude();
-        String desLongitude = forecastDTO.getDesLongitude();
-        String desLatitude = forecastDTO.getDesLatitude();
+        String destLongitude = forecastDTO.getDestLongitude();
+        String destLatitude = forecastDTO.getDestLatitude();
 
-        return directionService.driving(depLongitude, depLatitude, desLongitude, desLatitude);
+        return directionService.driving(depLongitude, depLatitude, destLongitude, destLatitude);
+    }
+
+    @GetMapping("/driving-routing")
+    public ResponseResult routing(@RequestBody ForecastDTO forecastDTO){
+
+        String depLongitude = forecastDTO.getDepLongitude();
+        String depLatitude = forecastDTO.getDepLatitude();
+        String destLongitude = forecastDTO.getDestLongitude();
+        String destLatitude = forecastDTO.getDestLatitude();
+
+        return directionService.driving(depLongitude, depLatitude, destLongitude, destLatitude);
     }
 }

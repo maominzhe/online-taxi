@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: 1.0
  **/
 @SpringBootApplication
-@EnableFeignClients
 @EnableDiscoveryClient
 @MapperScan("com.mashibing.serviceDriverUser.mapper")
 public class ApiDriverApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ApiDriverApplication.class);
+        SpringApplication.run(ApiDriverApplication.class,args);
     }
     @GetMapping("/test")
     public String test(){

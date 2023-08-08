@@ -12,8 +12,8 @@ import lombok.Data;
 public class ForecastDTO {
     private String depLongitude;
     private String depLatitude;
-    private String desLongitude;
-    private String desLatitude;
-    private String cityCode;
-    private String vehicleType;
+    private String destLongitude;
+    private String destLatitude;
+//    private String cityCode;
+//    private String vehicleType;
 }

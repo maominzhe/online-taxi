@@ -1,5 +1,6 @@
 package com.mashibing.serviceDriverUser.controller;
 
+import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.DriverUserWorkStatus;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.serviceDriverUser.service.DriverCarService;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -41,7 +43,7 @@ public class DriverCarController {
     }
 
     @GetMapping("/get-driver")
-    public ResponseResult getDriverByCarId(Long carId){
+    public ResponseResult<DriverUser> getDriverByCarId(Long carId){
         return driverCarService.getDriverByCarId(carId);
     }
 

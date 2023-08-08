@@ -52,7 +52,7 @@ public class DriverCarService {
         return ResponseResult.success(driverUserWorkStatus);
     }
 
-    public ResponseResult getDriverByCarId(Long carId){
+    public ResponseResult<DriverUser> getDriverByCarId(Long carId){
         Map<String,Object> map = new HashMap<>();
         map.put("car_id", carId);
         map.put("state", DriverCarConstants.DRIVER_STATE_VALID);
