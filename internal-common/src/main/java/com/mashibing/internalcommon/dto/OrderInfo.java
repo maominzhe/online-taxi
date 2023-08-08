@@ -233,4 +233,12 @@ public class OrderInfo {
      * 修改时间
      */
     private LocalDateTime gmtModified;
+
+    private String driverName;
+
+    private Integer journeyDuration;
+
+    private LocalDateTime estimatedArrivalTime;
+
+    private Integer journeyDistance;
 }

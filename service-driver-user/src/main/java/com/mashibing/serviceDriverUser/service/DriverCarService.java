@@ -52,4 +52,16 @@ public class DriverCarService {
         return ResponseResult.success(driverUserWorkStatus);
     }
 
+    public ResponseResult getDriverByCarId(Long carId){
+        Map<String,Object> map = new HashMap<>();
+        map.put("car_id", carId);
+        map.put("state", DriverCarConstants.DRIVER_STATE_VALID);
+        //map.put("state", DriverCarConstants.DRIVER_STATE_VALID);
+        List<DriverUser> driverUsers = driverUserMapper.selectByMap(map);
+        if(driverUsers.isEmpty()){
+            return ResponseResult.fail(CommonStatusEnum.DRIVER_NOT_EXITST.getCode(),CommonStatusEnum.DRIVER_NOT_EXITST.getValue());
+        }
+        DriverUser driverUser = driverUsers.get(0);
+        return ResponseResult.success(driverUser);
+    }
 }

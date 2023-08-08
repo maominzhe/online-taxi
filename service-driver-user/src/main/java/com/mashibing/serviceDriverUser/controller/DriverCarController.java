@@ -29,10 +29,6 @@ public class DriverCarController {
         return driverCarService.getDriverByPhone(driverPhone);
     }
 
-    @GetMapping("/get-cat/{carId}")
-    public ResponseResult gerCar(@PathVariable("carId") String carId){
-        return null;
-    }
 
 
     @GetMapping("/work-status")
@@ -43,4 +39,10 @@ public class DriverCarController {
         //return driverCarService.getWorkStatus(driverIdMock);
         return driverCarService.getWorkStatus(driverIdMock);
     }
+
+    @GetMapping("/get-driver")
+    public ResponseResult getDriverByCarId(Long carId){
+        return driverCarService.getDriverByCarId(carId);
+    }
+
 }
